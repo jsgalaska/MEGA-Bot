@@ -1,13 +1,15 @@
 # bot.py
 
+import cfg
 import socket
 import re
 
-HOST = "irc.twitch.tv"              # the Twitch IRC server
-PORT = 6667                         # always use port 6667!
-NICK = "nick"            # your Twitch username, lowercase
-PASS = "oauth:" # your Twitch OAuth token
-CHAN = "#chan"                   # the channel you want to join
+HOST = cfg.HOST
+PORT = cfg.PORT
+NICK = cfg.NICK
+PASS = cfg.PASS
+CHAN = cfg.CHAN
+approvedUsers = [cfg.USER1, cfg.USER2, cfg.USER3]
 
 
 #-------------------------------------------------
@@ -34,10 +36,11 @@ def part_channel(chan):
     s.send(bytes('PART %s\r\n' % chan, 'UTF-8'))
 
 def command_yolo():
-    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'swag'), 'UTF-8'))
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'SWAG'), 'UTF-8'))
 
-def command_test():
-    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'test'), 'UTF-8'))
+def command_swag():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'YOLO'), 'UTF-8'))
+
 
 
 #------------------------------------------------
@@ -66,7 +69,7 @@ def parse_message(msg):
     if len(msg) >= 1:
         msg = msg.split(' ')
         options = {'!yolo': command_yolo,
-                   '!test': command_test,
+                   '!swag': command_swag,
                    }
         if msg[0] in options:
             options[msg[0]]()
@@ -102,7 +105,9 @@ while True:
                 if line[1] == 'PRIVMSG':
                     sender = get_sender(line[0])
                     message = get_message(line)
-                    parse_message(message)
+                    for user in approvedUsers:
+                        if sender == user:
+                            parse_message(message)
 
                     print(sender + ": " + message)
 
