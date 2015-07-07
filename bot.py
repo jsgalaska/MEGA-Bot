@@ -41,6 +41,9 @@ def command_yolo():
 def command_swag():
     s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'YOLO'), 'UTF-8'))
 
+def command_clear():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, '.clear'), 'UTF-8'))
+
 
 
 #------------------------------------------------
@@ -70,6 +73,7 @@ def parse_message(msg):
         msg = msg.split(' ')
         options = {'!yolo': command_yolo,
                    '!swag': command_swag,
+                   '!c': command_clear,
                    }
         if msg[0] in options:
             options[msg[0]]()
