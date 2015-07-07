@@ -8,7 +8,7 @@ import time
 HOST = "irc.twitch.tv"              # the Twitch IRC server
 PORT = 6667                         # always use port 6667!
 NICK = "shuabot"            # your Twitch username, lowercase
-PASS = "oauth:emvw96fa7u8tdc9b5di0i27g6gsymr" # your Twitch OAuth token
+PASS = "oauth:" # your Twitch OAuth token
 CHAN = "#xshadow421x"                   # the channel you want to join
 RATE = (20.0/30) # messages per second
 CHAT_MSG=re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
