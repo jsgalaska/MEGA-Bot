@@ -9,10 +9,11 @@ PORT = cfg.PORT
 NICK = cfg.NICK
 PASS = cfg.PASS
 CHAN = cfg.CHAN
+
+ENGAGE = False
 approvedUsers = [cfg.USER1, cfg.USER2, cfg.USER3]
 
-
-#-------------------------------------------------
+#------------------------------------------------▼
 
 def send_pong(msg):
     s.send(bytes('PONG %s\r\n' % msg, 'UTF-8'))
@@ -35,6 +36,8 @@ def join_channel(chan):
 def part_channel(chan):
     s.send(bytes('PART %s\r\n' % chan, 'UTF-8'))
 
+#------------------------------------------------▼ !commands dictionary
+
 def command_yolo():
     s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'SWAG'), 'UTF-8'))
 
@@ -44,9 +47,12 @@ def command_swag():
 def command_clear():
     s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, '.clear'), 'UTF-8'))
 
+#------------------------------------------------▼ Messages
 
+def arrive_message():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'The Bot has arrived!'), 'UTF-8'))
 
-#------------------------------------------------
+#------------------------------------------------▼ get_stuff
 
 def get_sender(msg):
     result = ""
@@ -67,7 +73,9 @@ def get_message(msg):
         i += 1
     result = result.lstrip(':')
     return result
-        
+
+#------------------------------------------------▼ approvedUsers !commands [Admins]
+
 def parse_message(msg):
     if len(msg) >= 1:
         msg = msg.split(' ')
@@ -78,7 +86,8 @@ def parse_message(msg):
         if msg[0] in options:
             options[msg[0]]()
 
-#------------------------------------------------------
+#------------------------------------------------▼
+
 data = ""
 
 s = socket.socket()
@@ -114,6 +123,11 @@ while True:
                             parse_message(message)
 
                     print(sender + ": " + message)
+
+            while ENGAGE == False:
+                print('I have arrived in ' + CHAN + "'s channel!")
+                arrive_message()
+                ENGAGE = True
 
 
         
