@@ -1,8 +1,6 @@
 # bot.py
 
-import cfg
-import socket
-import re
+import cfg, socket, re, time, sys
 
 HOST = cfg.HOST
 PORT = cfg.PORT
@@ -12,6 +10,7 @@ CHAN = cfg.CHAN
 
 ENGAGE = False
 approvedUsers = [cfg.USER1, cfg.USER2, cfg.USER3]
+sec = cfg.sec # ◄ Set desired seconds to wait for script termination (Mine is set for 2)
 
 #------------------------------------------------▼
 
@@ -46,6 +45,11 @@ def command_swag():
 
 def command_clear():
     s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, '.clear'), 'UTF-8'))
+
+def command_leave():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'OK, fine. Later Scrublords!'), 'UTF-8'))
+    time.sleep(1)
+    countdown(sec)
 
 #------------------------------------------------▼ Messages
 
@@ -82,9 +86,22 @@ def parse_message(msg):
         options = {'!yolo': command_yolo,
                    '!swag': command_swag,
                    '!c': command_clear,
+                   '!exit': command_leave
                    }
         if msg[0] in options:
             options[msg[0]]()
+
+#------------------------------------------------▼ Terminate script Timer
+
+def countdown(sec):
+    print('Bot DISABLED!') 
+    while (sec >= 0):
+        print('Terminating script in:', sec,'seconds.')
+        sec -= 1
+        time.sleep(1)
+    if sec == -1:
+        print('Safe to end this Process.')
+        sys.exit()
 
 #------------------------------------------------▼
 
@@ -127,6 +144,7 @@ while True:
             while ENGAGE == False:
                 print('I have arrived in ' + CHAN + "'s channel!")
                 arrive_message()
+                time.sleep(1)
                 ENGAGE = True
 
 
