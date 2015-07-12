@@ -9,7 +9,7 @@ PASS = cfg.PASS
 CHAN = cfg.CHAN
 
 ENGAGE = False
-approvedUsers = [cfg.USER1, cfg.USER2, cfg.USER3]
+adminList = [cfg.USER1, cfg.USER2, cfg.USER3]
 sec = cfg.sec # ◄ Set desired seconds to wait for script termination (Mine is set for 2)
 MAXSENDINTERVAL = 20.0/30
 
@@ -97,7 +97,7 @@ def parse_message(sender, msg):
         admin = True
         split_msg = msg.split(' ')
         #checks to see if sender is an admin
-        for user in approvedUsers:
+        for user in adminList:
             if sender == user:
                 options = {'!yolo': command_yolo,
                    '!swag': command_swag,
