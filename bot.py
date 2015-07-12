@@ -94,7 +94,6 @@ def parse_message(sender, msg):
             command_scrublord()
             
         
-        admin = True
         split_msg = msg.split(' ')
         #checks to see if sender is an admin
         for user in adminList:
@@ -127,6 +126,7 @@ def countdown(sec):
         sec -= 1
         time.sleep(1)
     if sec == -1:
+        part_channel(CHAN)
         print('Safe to end this Process.')
         sys.exit()
 
