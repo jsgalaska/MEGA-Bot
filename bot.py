@@ -92,13 +92,10 @@ def parse_message(sender, msg):
         s1 = 'scrublords 4 life'
         if s1 in msg.lower():
             command_scrublords()
-
-        hlink = 'http'
-        if hlink in msg:
-            command_purge(sender)
+            
         
         admin = True
-        msg = msg.split(' ')
+        split_msg = msg.split(' ')
         #checks to see if sender is an admin
         for user in approvedUsers:
             if sender == user:
@@ -107,17 +104,22 @@ def parse_message(sender, msg):
                    '!c': command_clear,
                    '!exit': command_leave
                    }
-                if msg[0] in options:
-                    options[msg[0]]()
+                if split_msg[0] in options:
+                    options[split_msg[0]]()
             else:
                 admin = False
                 
         #if the sender is not an admin, runs the commands
         if not admin:
-            options = {'!yolo': command_yolo,
-                       }
-            if msg[0] in options:
-                options[msg[0]]()
+            print ('here')
+            hlink = 'http'
+            if hlink in msg:
+                command_purge(sender)
+            else:
+                options = {'!yolo': command_yolo,
+                           }
+                if split_msg[0] in options:
+                    options[split_msg[0]]()
 
 #------------------------------------------------▼ Terminate script Timer
 
