@@ -111,7 +111,6 @@ def parse_message(sender, msg):
                 
         #if the sender is not an admin, runs the commands
         if not admin:
-            print ('here')
             hlink = 'http'
             if hlink in msg:
                 command_purge(sender)
