@@ -11,6 +11,7 @@ CHAN = cfg.CHAN
 ENGAGE = False
 approvedUsers = [cfg.USER1, cfg.USER2, cfg.USER3]
 sec = cfg.sec # ◄ Set desired seconds to wait for script termination (Mine is set for 2)
+MAXSENDINTERVAL = 20.0/30
 
 #------------------------------------------------▼
 
@@ -51,6 +52,12 @@ def command_leave():
     time.sleep(1)
     countdown(sec)
 
+def command_scrublords():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'Once a scrublord always a scublord'), 'UTF-8'))
+
+def command_purge(sender):
+    s.send(bytes("PRIVMSG %s :%s %s 1\r\n" %(CHAN, '.timeout', sender), 'UTF-8'))
+
 #------------------------------------------------▼ Messages
 
 def arrive_message():
@@ -80,16 +87,37 @@ def get_message(msg):
 
 #------------------------------------------------▼ approvedUsers !commands [Admins]
 
-def parse_message(msg):
+def parse_message(sender, msg):
     if len(msg) >= 1:
+        s1 = 'scrublords 4 life'
+        if s1 in msg.lower():
+            command_scrublords()
+
+        hlink = 'http'
+        if hlink in msg:
+            command_purge(sender)
+        
+        admin = True
         msg = msg.split(' ')
-        options = {'!yolo': command_yolo,
+        #checks to see if sender is an admin
+        for user in approvedUsers:
+            if sender == user:
+                options = {'!yolo': command_yolo,
                    '!swag': command_swag,
                    '!c': command_clear,
                    '!exit': command_leave
                    }
-        if msg[0] in options:
-            options[msg[0]]()
+                if msg[0] in options:
+                    options[msg[0]]()
+            else:
+                admin = False
+                
+        #if the sender is not an admin, runs the commands
+        if not admin:
+            options = {'!yolo': command_yolo,
+                       }
+            if msg[0] in options:
+                options[msg[0]]()
 
 #------------------------------------------------▼ Terminate script Timer
 
@@ -123,7 +151,7 @@ while True:
         print (data)
         data_split = re.split(r"[~\r\n]+", data)
         data = data_split.pop()
-
+            
         for line in data_split:
             line = str.rstrip(line)
             line = str.split(line)
@@ -135,9 +163,7 @@ while True:
                 if line[1] == 'PRIVMSG':
                     sender = get_sender(line[0])
                     message = get_message(line)
-                    for user in approvedUsers:
-                        if sender == user:
-                            parse_message(message)
+                    parse_message(sender, message)
 
                     print(sender + ": " + message)
 
@@ -146,6 +172,7 @@ while True:
                 arrive_message()
                 time.sleep(1)
                 ENGAGE = True
+        time.sleep(MAXSENDINTERVAL)
 
 
         
