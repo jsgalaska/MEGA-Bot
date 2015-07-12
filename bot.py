@@ -52,7 +52,7 @@ def command_leave():
     time.sleep(1)
     countdown(sec)
 
-def command_scrublords():
+def command_scrublord():
     s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'Once a scrublord always a scublord'), 'UTF-8'))
 
 def command_purge(sender):
@@ -89,9 +89,9 @@ def get_message(msg):
 
 def parse_message(sender, msg):
     if len(msg) >= 1:
-        s1 = 'scrublords 4 life'
+        s1 = 'scrublord 4 life'
         if s1 in msg.lower():
-            command_scrublords()
+            command_scrublord()
             
         
         admin = True
@@ -106,19 +106,17 @@ def parse_message(sender, msg):
                    }
                 if split_msg[0] in options:
                     options[split_msg[0]]()
-            else:
-                admin = False
+                    return
                 
-        #if the sender is not an admin, runs the commands
-        if not admin:
-            hlink = 'http'
-            if hlink in msg:
-                command_purge(sender)
-            else:
-                options = {'!yolo': command_yolo,
-                           }
-                if split_msg[0] in options:
-                    options[split_msg[0]]()
+        #if the sender is not an admin, runs the command
+        hlink = 'http'
+        if hlink in msg:
+            command_purge(sender)
+        else:
+            options = {'!yolo': command_yolo,
+                    }
+            if split_msg[0] in options:
+                options[split_msg[0]]()
 
 #------------------------------------------------▼ Terminate script Timer
 
