@@ -1,6 +1,4 @@
-# bot.py
-
-import cfg, socket, re, time, sys
+import cfg, socket, re, time, sys, random
 
 HOST = cfg.HOST
 PORT = cfg.PORT
@@ -10,8 +8,25 @@ CHAN = cfg.CHAN
 
 ENGAGE = False
 adminList = [cfg.USER1, cfg.USER2, cfg.USER3]
-sec = cfg.sec # ◄ Set desired seconds to wait for script termination (Mine is set for 2)
+sec = cfg.sec # ◄ Set desired seconds to wait for script termination (0 is 1 sec)
+mood = 0 # ◄ Leave as is
 MAXSENDINTERVAL = 20.0/30
+
+#------------------------------------------------▼ Emotes
+
+angry = " >( "
+bigsmile = " :D "  
+bored = " :z "
+confused = " o_O "
+cool = "  B)  "
+heart = " <3 "
+sad = " :( "
+smile = " :) "
+tongue = " :P "
+surprised = " :o "
+undecided = " :\ "
+wink = " ;p "
+winking =" ;) "
 
 #------------------------------------------------▼
 
@@ -85,16 +100,38 @@ def get_message(msg):
     result = result.lstrip(':')
     return result
 
-#------------------------------------------------▼ approvedUsers !commands [Admins]
+#------------------------------------------------▼ The Bot know's that feel, bro
+
+def mood_swing():
+    mood = random.randint(1,7)
+    if mood == 1:
+        send_message(CHAN, 'Nice, ' + sender  + smile)
+    elif mood == 2:
+        send_message(CHAN, 'Fine, ' + sender  + tongue)
+    elif mood == 3:
+        send_message(CHAN, 'Not bad, ' + sender  + bored)
+    elif mood == 4:
+        send_message(CHAN, 'OK, ' + sender   + undecided)
+    elif mood == 5:
+        send_message(CHAN, 'Not sure, ' + sender   + confused)
+    elif mood == 6:
+        send_message(CHAN, 'Fustrated, ' + sender   + ' PJSalt')
+    elif mood == 7:
+        send_message(CHAN, "I'm doing wonderfully, " + sender + '. Just observing these MLG-pro, players'  + ' Kappa')
+
+#------------------------------------------------▼
 
 def parse_message(sender, msg):
     if len(msg) >= 1:
         s1 = 'scrublord 4 life'
+        hau = 'how art thou ' + NICK
         if s1 in msg.lower():
             command_scrublord()
-            
-        
+        elif hau in msg.lower():
+            mood_swing()
+                    
         split_msg = msg.split(' ')
+#------------------------------------------------▼ !commands [Admins]
         #checks to see if sender is an admin
         for user in adminList:
             if sender == user:
@@ -106,7 +143,7 @@ def parse_message(sender, msg):
                 if split_msg[0] in options:
                     options[split_msg[0]]()
                     return
-                
+#------------------------------------------------▼                
         #if the sender is not an admin, runs the command
         hlink = 'http'
         if hlink in msg:
