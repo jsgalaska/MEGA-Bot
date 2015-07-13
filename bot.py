@@ -171,7 +171,7 @@ def parse_message(sender, msg):
             mood_swing()
                     
         split_msg = msg.split(' ')
-#------------------------------------------------▼ !commands [Admins]
+        #----------------------------------------▼ !commands [Admins]
         #checks to see if sender is an admin
         for user in adminList:
             if sender == user:
@@ -184,11 +184,12 @@ def parse_message(sender, msg):
                 if split_msg[0] in options:
                     options[split_msg[0]]()
                     return
-#------------------------------------------------▼                
+        #----------------------------------------▼                
         #if the sender is not an admin, runs the command
         hlink = 'http'
         if hlink in msg:
             command_purge(sender)
+            send_message(CHAN, 'You were not authorized to do that, ' + sender)
         else:
             options = {'!yolo': command_yolo,
                        '!roulette': shoot_me_mofo
@@ -196,7 +197,7 @@ def parse_message(sender, msg):
             if split_msg[0] in options:
                 options[split_msg[0]]()
 
-#------------------------------------------------▼ Terminate script Timer
+#------------------------------------------------▼ Terminate Script Timer
 
 def countdown(sec):
     print('Bot DISABLED!') 
@@ -220,7 +221,7 @@ send_pass(PASS)
 send_nick(NICK)
 join_channel(CHAN)
 
-print('loading')
+print('Initializing')
 
 while True:
     
