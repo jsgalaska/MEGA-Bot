@@ -9,7 +9,6 @@ CHAN = cfg.CHAN
 ENGAGE = False
 adminList = [cfg.USER1, cfg.USER2, cfg.USER3]
 sec = cfg.sec # ◄ Set desired seconds to wait for script termination (0 is 1 sec)
-mood = 0 # ◄ Leave as is
 MAXSENDINTERVAL = 20.0/30
 
 #------------------------------------------------▼ Emotes
@@ -102,6 +101,8 @@ def get_message(msg):
 
 #------------------------------------------------▼ The Bot know's that feel, bro
 
+mood = 0 # ◄ Leave as is
+
 def mood_swing():
     mood = random.randint(1,7)
     if mood == 1:
@@ -119,6 +120,45 @@ def mood_swing():
     elif mood == 7:
         send_message(CHAN, "I'm doing wonderfully, " + sender + '. Just observing these MLG-pro, players'  + ' Kappa')
 
+#------------------------------------------------▼ I wanna play a game
+
+chamber = 0
+cylinder = 0
+
+def shoot_me_mofo():
+    send_message(CHAN, 'Six chambers; one ban-hammer, ' + sender + '. What will you get?')
+    time.sleep(2)
+    send_message(CHAN, '/me loads a grenade and rotates the cylinder...')
+    time.sleep(2)
+    chamber = random.randint(1,6)
+    cylinder = random.randint(1,6)
+    if  chamber == 1 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    elif  chamber == 2 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    elif  chamber == 3 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    elif  chamber == 4 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    elif  chamber == 5 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    elif  chamber == 6 and cylinder == chamber:
+        time.sleep(1)
+        send_message(CHAN, sender + ' JUST GOT REKT!!')
+        command_purge(sender)
+    else:
+        send_message(CHAN, sender + ', you got lucky this time, scrub!')
+        print('Bullet in:', chamber, 'of 6', 'Rotated to:', cylinder, 'of 6')
 #------------------------------------------------▼
 
 def parse_message(sender, msg):
@@ -138,7 +178,8 @@ def parse_message(sender, msg):
                 options = {'!yolo': command_yolo,
                    '!swag': command_swag,
                    '!c': command_clear,
-                   '!exit': command_leave
+                   '!exit': command_leave,
+                   '!roulette': shoot_me_mofo
                    }
                 if split_msg[0] in options:
                     options[split_msg[0]]()
@@ -150,6 +191,7 @@ def parse_message(sender, msg):
             command_purge(sender)
         else:
             options = {'!yolo': command_yolo,
+                       '!roulette': shoot_me_mofo
                     }
             if split_msg[0] in options:
                 options[split_msg[0]]()
