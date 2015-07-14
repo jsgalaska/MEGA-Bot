@@ -115,7 +115,7 @@ def get_message(msg):
 
 #------------------------------------------------▼ The Bot know's that feel, bro
 
-mood = 0 # ◄ Leave as is
+mood = 0
 
 def mood_swing():
     mood = random.randint(1,7)
@@ -146,33 +146,14 @@ def shoot_me_mofo():
     time.sleep(2)
     chamber = random.randint(1,6)
     cylinder = random.randint(1,6)
-    if  chamber == 1 and cylinder == chamber:
-        time.sleep(1)
-        send_message(CHAN, sender + ' JUST GOT REKT!!')
-        command_purge(sender)
-    elif  chamber == 2 and cylinder == chamber:
-        time.sleep(1)
-        send_message(CHAN, sender + ' JUST GOT REKT!!')
-        command_purge(sender)
-    elif  chamber == 3 and cylinder == chamber:
-        time.sleep(1)
-        send_message(CHAN, sender + ' JUST GOT REKT!!')
-        command_purge(sender)
-    elif  chamber == 4 and cylinder == chamber:
-        time.sleep(1)
-        send_message(CHAN, sender + ' JUST GOT REKT!!')
-        command_purge(sender)
-    elif  chamber == 5 and cylinder == chamber:
-        time.sleep(1)
-        send_message(CHAN, sender + ' JUST GOT REKT!!')
-        command_purge(sender)
-    elif  chamber == 6 and cylinder == chamber:
+    if  cylinder == chamber:
         time.sleep(1)
         send_message(CHAN, sender + ' JUST GOT REKT!!')
         command_purge(sender)
     else:
         send_message(CHAN, sender + ', you got lucky this time, scrub!')
         print('Bullet in:', chamber, 'of 6', 'Rotated to:', cylinder, 'of 6')
+
 #------------------------------------------------▼
 
 def parse_message(sender, msg):
