@@ -50,6 +50,15 @@ def join_channel(chan):
 def part_channel(chan):
     s.send(bytes('PART %s\r\n' % chan, 'UTF-8'))
 
+def capreq_tags():
+    s.send(bytes("CAP REQ :twitch.tv/tags\r\n", 'UTF-8'))
+
+def capreq_membership():
+    s.send(bytes("CAP REQ :twitch.tv/membership\r\n", 'UTF-8'))
+
+def capreq_commands():
+       s.send(bytes("CAP REQ :twitch.tv/commands\r\n", 'UTF-8'))
+
 #------------------------------------------------▼ !commands dictionary
 
 def command_yolo():
@@ -71,6 +80,11 @@ def command_scrublord():
 
 def command_purge(sender):
     s.send(bytes("PRIVMSG %s :%s %s 1\r\n" %(CHAN, '.timeout', sender), 'UTF-8'))
+
+#------------------------------------------------▼ Cap Commands
+
+def command_getusers():
+    s.send(bytes("CLEARCHAT %s" % CHAN, 'UTF-8'))
 
 #------------------------------------------------▼ Messages
 
@@ -219,6 +233,9 @@ s.connect((HOST, PORT))
 
 send_pass(PASS)
 send_nick(NICK)
+capreq_membership()
+capreq_commands()
+#capreq_tags()
 join_channel(CHAN)
 
 print('Initializing')
@@ -245,6 +262,9 @@ while True:
                     parse_message(sender, message)
 
                     print(sender + ": " + message)
+                if line[1] == 'JOIN':
+                    sender = get_sender(line[0])
+                    send_message(CHAN, 'Welcome '+sender+'! Ya Scrub')
 
             while ENGAGE == False:
                 print('I have arrived in ' + CHAN + "'s channel!")
