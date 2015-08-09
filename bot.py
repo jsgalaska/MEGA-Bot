@@ -7,25 +7,9 @@ PASS = cfg.PASS
 CHAN = cfg.CHAN
 
 ENGAGE = False
-adminList = [cfg.USER1, cfg.USER2, cfg.USER3]
+adminList = [cfg.ADMIN1, cfg.ADMIN2, cfg.ADMIN3]
 sec = cfg.sec # ◄ Set desired seconds to wait for script termination (0 is 1 sec)
 MAXSENDINTERVAL = 20.0/30
-
-#------------------------------------------------▼ Emotes
-
-angry = " >( "
-bigsmile = " :D "  
-bored = " :z "
-confused = " o_O "
-cool = "  B)  "
-heart = " <3 "
-sad = " :( "
-smile = " :) "
-tongue = " :P "
-surprised = " :o "
-undecided = " :\ "
-wink = " ;p "
-winking =" ;) "
 
 #------------------------------------------------▼
 
@@ -115,24 +99,11 @@ def get_message(msg):
 
 #------------------------------------------------▼ The Bot know's that feel, bro
 
-mood = 0
+mood = [cfg.nice, cfg.fine, cfg.not_bad, cfg.ok, cfg.not_sure, cfg.frustrated, cfg.doin_great] 
 
 def mood_swing():
-    mood = random.randint(1,7)
-    if mood == 1:
-        send_message(CHAN, 'Nice, ' + sender  + smile)
-    elif mood == 2:
-        send_message(CHAN, 'Fine, ' + sender  + tongue)
-    elif mood == 3:
-        send_message(CHAN, 'Not bad, ' + sender  + bored)
-    elif mood == 4:
-        send_message(CHAN, 'OK, ' + sender   + undecided)
-    elif mood == 5:
-        send_message(CHAN, 'Not sure, ' + sender   + confused)
-    elif mood == 6:
-        send_message(CHAN, 'Fustrated, ' + sender   + ' PJSalt')
-    elif mood == 7:
-        send_message(CHAN, "I'm doing wonderfully, " + sender + '. Just observing these MLG-pro, players'  + ' Kappa')
+    send_message(CHAN,"@"+sender+random.choice(mood))
+
 
 #------------------------------------------------▼ I wanna play a game
 
