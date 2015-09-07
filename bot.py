@@ -65,6 +65,9 @@ def command_scrublord():
 def command_purge(sender):
     s.send(bytes("PRIVMSG %s :%s %s 1\r\n" %(CHAN, '.timeout', sender), 'UTF-8'))
 
+def general_commands():
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'General commands available: !roulette, and !commands'), 'UTF-8'))
+
 #------------------------------------------------▼ Cap Commands
 
 def command_getusers():
@@ -127,16 +130,113 @@ def shoot_me_mofo():
 
 #------------------------------------------------▼
 
+admin_commands = ['!swag', '!c', '!upTime'] #◄ 000
+href = ['https://www.', 'www.', '.com', '.co', '.uk', '.jpg', '.gif']#◄ 001
+part = '!go' #◄ 002
+
 def parse_message(sender, msg):
     if len(msg) >= 1:
         s1 = 'scrublord 4 life'
-        hau = 'how art thou ' + NICK
+        hat = 'how art thou ' + NICK
+
+        split_msg = msg.split(' ')
+        
         if s1 in msg.lower():
             command_scrublord()
-        elif hau in msg.lower():
+        elif hat in msg.lower():
             mood_swing()
+
+        elif part in msg.lower(): #◄ 002
+            for user in adminList:
+                if sender == user:
+                    command_leave()
                     
-        split_msg = msg.split(' ')
+        
+
+
+        #----------------------------------------▼
+        # ▓ 2015-09-07 Test Code Below! ▓
+        link_privilege = None
+        print('DEBUG: link_privilege = ', link_privilege)
+        #----------------------------------------▼ Admin !commands
+        #checks to see if sender is an admin
+        for command in admin_commands: #◄ 000
+            if command in msg.lower():
+                print('DEBUG: Match found in msg!')
+                try:
+                    aF = open('admins.txt', 'rt') # ◄ Create a user-list File
+                    with aF as file:
+                        print('DEBUG: Admins File OPEN')
+                        print('DEBUG: Scanning Sender data...')
+                        for line in file: 
+                            if sender in line:
+                                print('DEBUG: Sender is an Admin!')
+                                print('DEBUG: Scanning Options...')
+                                options = {'!swag': command_swag,
+                                           '!c': command_clear,                                          
+                                           '!upTime': command_upTime
+                                           }
+                                if split_msg[0] in options:
+                                    options[split_msg[0]]()
+                                
+                except IOError:
+                    print('DEBUG: ▓▓ ▓▓ ▓▓ ERROR ▓ ▓ File Not Found! ▓▓ ▓▓ ▓▓')
+                    return
+                
+                finally:
+                    if aF is not None:
+                        aF.close()
+                        return
+
+        #----------------------------------------▼
+        # ▓ 2015-09-07 Test Code Below! ▓
+        #if link posted, checks user's privilege     
+        for hlink in href: #◄ 001
+            if hlink in msg.lower():
+                print('DEBUG: link_privilege = ', link_privilege)
+                print('DEBUG: Match found in msg!')
+                try:
+                    sF = open('scrubs.txt', 'rt') # ◄ Create a user-list File
+                    with sF as file:
+                        print('DEBUG: Scrub File open? : ', sF.closed)
+                        print('DEBUG: Scanning Sender data...')
+                        for line in file: 
+                            if sender in line:
+                                print('DEBUG: Sender is a Scrub!')
+                                print('DEBUG: link_privilege = ', link_privilege)
+                                link_privilege = 1
+                                print('DEBUG: link_privilege = ', link_privilege)
+                                
+                except IOError:
+                    print('DEBUG: ▓▓ ▓▓ ▓▓ ERROR ▓ ▓ File Not Found! ▓▓ ▓▓ ▓▓')
+                    return
+                
+                finally:
+                    if link_privilege is None:
+                        command_purge(sender)
+                        send_message(CHAN, 'You were not authorized to do that, ' + sender)
+                    if sF is not None:
+                        sF.close()
+                    if link_privilege is not None:
+                        link_privilege = None
+                return
+
+        #----------------------------------------▼
+        #if the sender is not an admin, runs this                
+        else:
+            print('DEBUG: No Match')
+            options = {'!yolo': command_yolo,
+                       '!roulette': shoot_me_mofo,
+                       '!commands': general_commands,
+                       }
+            if split_msg[0] in options:
+                options[split_msg[0]]()
+                return
+
+        
+
+
+        ''' ▓ 2015-09-07 Temp Removal (Former Code) ▓
         #----------------------------------------▼ !commands [Admins]
         #checks to see if sender is an admin
         for user in adminList:
@@ -161,7 +261,7 @@ def parse_message(sender, msg):
                        '!roulette': shoot_me_mofo
                     }
             if split_msg[0] in options:
-                options[split_msg[0]]()
+                options[split_msg[0]]()'''
 
 #------------------------------------------------▼ Terminate Script Timer
 
