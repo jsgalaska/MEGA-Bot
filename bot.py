@@ -65,8 +65,8 @@ def command_scrublord():
 def command_purge(sender):
     s.send(bytes("PRIVMSG %s :%s %s 1\r\n" %(CHAN, '.timeout', sender), 'UTF-8'))
 
-def general_commands():
-    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'General commands available: !roulette, and !commands'), 'UTF-8'))
+#def general_commands(): #◄ 003 ▓
+#    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'General commands available: !roulette, and !commands'), 'UTF-8'))
 
 #------------------------------------------------▼ Cap Commands
 
@@ -130,9 +130,9 @@ def shoot_me_mofo():
 
 #------------------------------------------------▼
 
-admin_commands = ['!swag', '!c', '!upTime'] #◄ 000
+admin_commands = ['!swag', '!c'] #◄ 000 ▓ (◄ 003 Conflict with !c & !commands)
 href = ['https://www.', 'www.', '.com', '.co', '.uk', '.jpg', '.gif']#◄ 001
-part = '!go' #◄ 002
+part = '!exit' #◄ 002
 
 def parse_message(sender, msg):
     if len(msg) >= 1:
@@ -161,32 +161,32 @@ def parse_message(sender, msg):
         #----------------------------------------▼ Admin !commands
         #checks to see if sender is an admin
         for command in admin_commands: #◄ 000
-            if command in msg.lower():
+            if command in msg:
                 print('DEBUG: Match found in msg!')
                 try:
-                    aF = open('admins.txt', 'rt') # ◄ Create a user-list File
+                    aF = open('admins.txt', 'rt') # ◄ Create a/this user-list File
                     with aF as file:
-                        print('DEBUG: Admins File OPEN')
+                        print('DEBUG: Is Admins File open?: ', aF.closed)
                         print('DEBUG: Scanning Sender data...')
                         for line in file: 
                             if sender in line:
                                 print('DEBUG: Sender is an Admin!')
                                 print('DEBUG: Scanning Options...')
                                 options = {'!swag': command_swag,
-                                           '!c': command_clear,                                          
-                                           '!upTime': command_upTime
+                                           '!c': command_clear
                                            }
                                 if split_msg[0] in options:
                                     options[split_msg[0]]()
                                 
                 except IOError:
-                    print('DEBUG: ▓▓ ▓▓ ▓▓ ERROR ▓ ▓ File Not Found! ▓▓ ▓▓ ▓▓')
+                    print('DEBUG: ▓▓ ▓▓ ▓▓ ▓ ERROR ▓ File Not Found! ▓▓ ▓▓ ▓▓')
                     return
                 
                 finally:
                     if aF is not None:
                         aF.close()
-                        return
+                    print('DEBUG: Is Admins File open?: ', aF.closed)
+                    return
 
         #----------------------------------------▼
         # ▓ 2015-09-07 Test Code Below! ▓
@@ -196,9 +196,9 @@ def parse_message(sender, msg):
                 print('DEBUG: link_privilege = ', link_privilege)
                 print('DEBUG: Match found in msg!')
                 try:
-                    sF = open('scrubs.txt', 'rt') # ◄ Create a user-list File
+                    sF = open('scrubs.txt', 'rt') # ◄ Create a/this user-list File
                     with sF as file:
-                        print('DEBUG: Scrub File open? : ', sF.closed)
+                        print('DEBUG: Scrub File open?: ', sF.closed)
                         print('DEBUG: Scanning Sender data...')
                         for line in file: 
                             if sender in line:
@@ -208,7 +208,7 @@ def parse_message(sender, msg):
                                 print('DEBUG: link_privilege = ', link_privilege)
                                 
                 except IOError:
-                    print('DEBUG: ▓▓ ▓▓ ▓▓ ERROR ▓ ▓ File Not Found! ▓▓ ▓▓ ▓▓')
+                    print('DEBUG: ▓▓ ▓▓ ▓▓ ▓ ERROR ▓ File Not Found! ▓▓ ▓▓ ▓▓')
                     return
                 
                 finally:
@@ -219,15 +219,16 @@ def parse_message(sender, msg):
                         sF.close()
                     if link_privilege is not None:
                         link_privilege = None
-                return
+                    print('DEBUG: Scrub File open?: ', sF.closed)
+                    return
 
         #----------------------------------------▼
         #if the sender is not an admin, runs this                
         else:
             print('DEBUG: No Match')
             options = {'!yolo': command_yolo,
-                       '!roulette': shoot_me_mofo,
-                       '!commands': general_commands,
+                       '!roulette': shoot_me_mofo#, ◄ (Reminder to replace comma if solution found for !commands)
+                       #'!commands': general_commands #◄ 003 ▓ Literally conflicts with "!c" command; idea for new name?
                        }
             if split_msg[0] in options:
                 options[split_msg[0]]()
