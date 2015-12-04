@@ -65,8 +65,8 @@ def command_scrublord():
 def command_purge(sender):
     s.send(bytes("PRIVMSG %s :%s %s 1\r\n" %(CHAN, '.timeout', sender), 'UTF-8'))
 
-#def general_commands(): #◄ 003 ▓
-#    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'General commands available: !roulette, and !commands'), 'UTF-8'))
+def general_commands(): #◄ 003 ▓
+    s.send(bytes("PRIVMSG %s :%s\r\n" %(CHAN, 'General commands available: !roulette, and !commands'), 'UTF-8'))
 
 #------------------------------------------------▼ Cap Commands
 
@@ -130,7 +130,7 @@ def shoot_me_mofo():
 
 #------------------------------------------------▼
 
-admin_commands = ['!swag', '!c'] #◄ 000 ▓ (◄ 003 Conflict with !c & !commands)
+admin_commands = ['^!swag $', '^!c $'] #◄ 000 ▓ (◄ 003 Conflict with !c & !commands)
 href = ['https://www.', 'www.', '.com', '.co', '.uk', '.jpg', '.gif']#◄ 001
 part = '!exit' #◄ 002
 
@@ -161,7 +161,7 @@ def parse_message(sender, msg):
         #----------------------------------------▼ Admin !commands
         #checks to see if sender is an admin
         for command in admin_commands: #◄ 000
-            if command in msg:
+            if re.match(command, msg):
                 print('DEBUG: Match found in msg!')
                 try:
                     aF = open('admins.txt', 'rt') # ◄ Create a/this user-list File
@@ -227,8 +227,8 @@ def parse_message(sender, msg):
         else:
             print('DEBUG: No Match')
             options = {'!yolo': command_yolo,
-                       '!roulette': shoot_me_mofo#, ◄ (Reminder to replace comma if solution found for !commands)
-                       #'!commands': general_commands #◄ 003 ▓ Literally conflicts with "!c" command; idea for new name?
+                       '!roulette': shoot_me_mofo,# ◄, (Reminder to replace comma if solution found for !commands)
+                       '!commands': general_commands
                        }
             if split_msg[0] in options:
                 options[split_msg[0]]()
