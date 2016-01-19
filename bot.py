@@ -102,10 +102,10 @@ def get_message(msg):
 
 #------------------------------------------------▼ The Bot know's that feel, bro
 
-mood = [cfg.nice, cfg.fine, cfg.not_bad, cfg.ok, cfg.not_sure, cfg.frustrated, cfg.doin_great] 
+#mood = [cfg.nice, cfg.fine, cfg.not_bad, cfg.ok, cfg.not_sure, cfg.frustrated, cfg.doin_great] 
 
-def mood_swing():
-    send_message(CHAN,"@"+sender+random.choice(mood))
+#def mood_swing():
+#    send_message(CHAN,"@"+sender+random.choice(mood))
 
 
 #------------------------------------------------▼ I wanna play a game
@@ -128,9 +128,16 @@ def shoot_me_mofo():
         send_message(CHAN, sender + ', you got lucky this time, scrub!')
         print('Bullet in:', chamber, 'of 6', 'Rotated to:', cylinder, 'of 6')
 
+#------------------------------------------------▼ Print list of viewers
+
+def list_viewers():
+    print('Viewers Log:')
+    for viewer in loggedViewers:
+        print(viewer)
+
 #------------------------------------------------▼
 
-admin_commands = ['^!swag $', '^!c $'] #◄ 000 ▓ (◄ 003 Conflict with !c & !commands)
+admin_commands = ['^!swag $', '^!c $', '^!viewers $'] #◄ 000 ▓ (◄ 003 Conflict with !c & !commands)
 href = ['https://www.', 'www.', '.com', '.co', '.uk', '.jpg', '.gif']#◄ 001
 part = '!exit' #◄ 002
 
@@ -173,7 +180,8 @@ def parse_message(sender, msg):
                                 print('DEBUG: Sender is an Admin!')
                                 print('DEBUG: Scanning Options...')
                                 options = {'!swag': command_swag,
-                                           '!c': command_clear
+                                           '!c': command_clear,
+                                           '!viewers': list_viewers
                                            }
                                 if split_msg[0] in options:
                                     options[split_msg[0]]()
@@ -267,6 +275,10 @@ def parse_message(sender, msg):
 #------------------------------------------------▼ Terminate Script Timer
 
 def countdown(sec):
+    for viewer in loggedViewers:
+        viewersLog.write(viewer)
+        viewersLog.write('\n')
+    viewersLog.close()
     print('Bot DISABLED!') 
     while (sec >= 0):
         print('Terminating script in:', sec,'seconds.')
@@ -293,6 +305,15 @@ join_channel(CHAN)
 
 print('Initializing')
 
+loggedViewers = []
+try:
+    with open('viewers_log.txt', 'rt') as viewersLog:
+        for line in loggedViewers:
+            loggedViewers.append(line)
+except IOError:
+    print('Error opening viewers_log')
+
+
 while True:
     
     try:
@@ -317,6 +338,7 @@ while True:
                     print(sender + ": " + message)
                 if line[1] == 'JOIN':
                     sender = get_sender(line[0])
+                    loggedViewers.append(sender)
                     send_message(CHAN, 'Welcome '+sender+'! Ya Scrub')
 
             while ENGAGE == False:
