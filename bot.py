@@ -1,3 +1,4 @@
+#!/usr/bon/python3
 import cfg, socket, re, time, sys, random
 
 HOST = cfg.HOST
