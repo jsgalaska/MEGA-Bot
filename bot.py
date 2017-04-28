@@ -1,11 +1,18 @@
-#!/usr/bon/python3
+#!/usr/bin/python3
 import cfg, socket, re, time, sys, random
+import psycopg2
+import sys
 
 HOST = cfg.HOST
 PORT = cfg.PORT
 NICK = cfg.NICK
 PASS = cfg.PASS
 CHAN = cfg.CHAN
+DB_HOST = cfg.DB_HOST
+DB_NAME = cfg.DB_NAME
+DB_USER = cfg.DB_USER
+DB_PASSWORD = cfg.DB_PASSWORD
+DB_VIEWERS_TABLE = cfg.DB_VIEWERS_TABLE
 
 ENGAGE = False
 adminList = [cfg.ADMIN1, cfg.ADMIN2, cfg.ADMIN3]
@@ -255,7 +262,36 @@ def countdown(sec):
         print('Safe to end this Process.')
         sys.exit()
 
-#------------------------------------------------▼
+#------------------------------------------------▼ Connect to DB
+
+def save_to_db(username):
+    #Define our connection string
+    conn_string = "host=%s dbname=%s user=%s password=%s" % (DB_HOST, DB_NAME, DB_USER, DB_PASSWORD)
+
+    #Print the connection string we will use to connection
+    print ("Connecting to database\n ->%s" % (conn_string))
+
+    #get a connection, if connection cannot be made an exception will be raised here
+    conn = psycopg2.connect(conn_string)
+
+    #conn.cursor will return a cursor object, you can use this cursor object to perform queries
+    cursor = conn.cursor()
+    print ("Connected:\n")
+
+    #Check to see if username exists in database. If not, insert username
+    cursor.execute("SELECT username FROM " +DB_VIEWERS_TABLE+ " WHERE username=%s", (username,))
+
+    if(cursor.fetchone() is not None):
+        print ("username found")
+    else:
+        cursor.execute("INSERT INTO " +DB_VIEWERS_TABLE+ " (username) VALUES (%s);", (username,))
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    print ("Disconnected:\n")
+#------------------------------------------------
 
 data = ""
 
@@ -270,18 +306,6 @@ capreq_commands()
 join_channel(CHAN)
 
 print('Initializing')
-
-loggedViewers = []
-try:
-    with open('viewers_log.txt', 'rt') as viewersLog:
-        for line in loggedViewers:
-            loggedViewers.append(line)
-        for viewer in loggedViewers: #◄ 004 May or may not work properly here
-            viewersLog.write(viewer)
-            viewersLog.write('\n')
-        viewersLog.close()
-except IOError:
-    print('▓▓ ▓▓ ERROR: Failed to load viewers_log! ▓▓ ▓▓')
 
 while True:
     
@@ -307,13 +331,12 @@ while True:
 
                 if line[1] == 'JOIN':
                     sender = get_sender(line[0])
-                    loggedViewers.append(sender)
+                    save_to_db(sender)
                     print('▌VIEWER UPDATE: ' +'|' +sender +'|' +' has joined the chat!')
                     #send_message(CHAN, 'Welcome '+sender+'! Ya Scrub') -Turned off. May scare/trigger people
 
                 if line[1] == 'PART':
                     sender = get_sender(line[0])
-                    loggedViewers.append(sender)
                     print('▌VIEWER UPDATE: '+sender +' has left the chat! :(')
 
             while ENGAGE == False:
